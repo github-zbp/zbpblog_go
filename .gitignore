@@ -1,0 +1,9 @@
+logs
+conf
+uploads
+statics/images
+static/img
+tests
+go.sum
+go.mod
+nohup.out

@@ -1,0 +1,74 @@
+<!-- 分页模板 -->
+<div id="page" style="padding-top:15px">
+    {{if (ne .page_info.curPage 1)}}<a class="btn btn-default page-first common-page-link" page-info="1">第一页</a>{{end}}
+    {{if .page_info.prevPage}}
+        <a class="btn btn-default page-prev  common-page-link" page-info="{{.page_info.prevPage}}">上一页</a>
+    {{end}}
+    {{if .page_info.nextPage}}
+        <a class="btn btn-default page-next  common-page-link" page-info="{{.page_info.nextPage}}">下一页</a>
+    {{end}}
+    {{if ne .page_info.totalPage .page_info.curPage}}<a class="btn btn-default page-first common-page-link" page-info="{{.page_info.totalPage}}">尾页</a>{{end}}
+    <div class="page_info">当前第 <b>{{.page_info.curPage}}</b> 页 &nbsp;&nbsp;&nbsp;&nbsp; 共 <b>{{.page_info.totalPage}}</b> 页 <b>{{.page_info.totalRow}}</b> 条信息</div>
+</div>
+
+<script>
+    function buildPageLink(){
+        var links = $(".common-page-link")
+        var curUrlObj = parseUrl(location.href)
+        var curParams = curUrlObj.params
+
+        links.each(function(i, link){
+            var newParams = JSON.parse(JSON.stringify(curParams))
+            var pageParam = $(link).attr("page-info")
+            newParams.page = pageParam
+            var urlObj = {
+                "path" : curUrlObj.path,
+                "params" : newParams
+            }
+            var href = stringifyUrl(urlObj)
+            $(link).attr("href", href)
+        })
+    }
+
+    function stringifyUrl(urlParsedObj){
+        if(urlParsedObj.length == 0){
+            return urlParsedObj.path
+        }
+        var url = urlParsedObj.path + "?"
+        var params = urlParsedObj.params
+        for(var k in params){
+            url += k + "=" + params[k] + "&"
+        }
+        if(url.lastIndexOf("&") == url.length-1){
+            url = url.substr(0, url.length-1)
+        }
+        return url
+    }
+
+    function parseUrl(url){
+        var urlArr, paramStr
+        var paramObj = {}
+        if (!url){
+            return ""
+        }
+        urlArr = url.split("?")
+        if(urlArr.length >= 2){
+            paramStr = urlArr[1]
+            var paramArr = paramStr.split("&")
+            for(var i in paramArr){
+                var [param_key, param_value] = paramArr[i].split("=")
+                paramObj[param_key] = param_value
+            }
+        }
+
+        return {
+            "path" : urlArr[0],
+            "params" : paramObj
+        }
+    }
+
+    $(function(){
+        // 获取当前url并去除当前
+        buildPageLink()
+    })
+</script>

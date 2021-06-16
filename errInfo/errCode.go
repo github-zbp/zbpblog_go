@@ -1,0 +1,72 @@
+package errInfo
+
+type ErrCode int
+
+func (ec ErrCode) Error() (errmsg string){
+	var ok bool
+	if errmsg, ok = ErrCodeMap[ec]; ok{
+		errmsg = ErrCodeMap[ec]
+	}
+	return errmsg
+}
+
+var CODE_OK ErrCode = 0
+var CODE_AUTH_ERR ErrCode = 10001
+var CODE_PARAM_ERR ErrCode = 10002
+var CODE_PROG_ERR ErrCode = 10003
+var CODE_MORE_BLOG_FAILED ErrCode = 20001
+var CODE_CAPCHA_EMPTY ErrCode = 30001
+var CODE_USERNAME_EMPTY ErrCode = 30002
+var CODE_PASSWORD_EMPTY ErrCode = 30003
+var CODE_CAPCHA_WRONG ErrCode = 30004
+var CODE_USER_NOT_FIND ErrCode = 30005
+var CODE_PASSWORD_WRONG ErrCode = 30006
+var CODE_LOAD_TAG_PIC_FAIL ErrCode = 40001
+var CODE_SEARCH_SERIES_FAIL ErrCode = 40002
+var CODE_INSERT_BLOG_FAILED ErrCode = 40003
+var CODE_EDIT_BLOG_FAILED ErrCode = 40004
+var CODE_BIND_BLOG_TAGS_FAILED ErrCode = 40005
+var CODE_DELETE_FAILED ErrCode = 40006
+var CODE_ADD_CATEGORY_FAILED ErrCode = 40007
+var CODE_EDIT_CATEGORY_FAILED ErrCode = 40008
+var CODE_PASS_WRONG_MODEL ErrCode = 40009
+var CODE_TRAN_STATUS_FAILED ErrCode = 40010
+var CODE_SORT_FAILED ErrCode = 40011
+var CODE_EDIT_SITE_FAILED ErrCode = 40012
+var CODE_GET_BLOG_THUMBS_FAILED ErrCode = 40013
+var CODE_ADD_USER_FAILED ErrCode = 40014
+var CODE_EDIT_USER_FAILED ErrCode = 40015
+var CODE_GET_BLOGS_POST_BD_FAILED ErrCode = 40016
+var CODE_GET_BLOGS_POST_BD_EMPTY ErrCode = 40017
+var CODE_BLOGS_POST_BD_FAILED ErrCode = 40018
+
+var ErrCodeMap = map[ErrCode]string{
+	CODE_MORE_BLOG_FAILED : "获取更多文章失败",
+	CODE_PARAM_ERR : "接口传参错误",
+	CODE_PROG_ERR : "程序特殊异常",
+	CODE_CAPCHA_EMPTY : "验证码不能为空",
+	CODE_USERNAME_EMPTY : "用户名不能为空",
+	CODE_PASSWORD_EMPTY : "密码不能为空",
+	CODE_CAPCHA_WRONG : "验证码错误",
+	CODE_USER_NOT_FIND : "此用户不存在",
+	CODE_PASSWORD_WRONG : "用户密码错误",
+	CODE_LOAD_TAG_PIC_FAIL : "加载标签图片失败",
+	CODE_SEARCH_SERIES_FAIL: "搜索系列失败",
+	CODE_AUTH_ERR : "没有权限请登录",
+	CODE_INSERT_BLOG_FAILED : "添加博客失败",
+	CODE_EDIT_BLOG_FAILED : "修改博客失败",
+	CODE_BIND_BLOG_TAGS_FAILED : "绑定博客标签失败",
+	CODE_DELETE_FAILED : "删除失败",
+	CODE_ADD_CATEGORY_FAILED : "新增栏目失败",
+	CODE_EDIT_CATEGORY_FAILED : "修改栏目失败",
+	CODE_PASS_WRONG_MODEL : "传递了错误的模型名称",
+	CODE_TRAN_STATUS_FAILED : "	修改状态失败",
+	CODE_SORT_FAILED : "排序失败",
+	CODE_EDIT_SITE_FAILED : "修改站点信息失败",
+	CODE_GET_BLOG_THUMBS_FAILED : "后台加载所有博客图片失败",
+	CODE_ADD_USER_FAILED : "添加管理员失败",
+	CODE_EDIT_USER_FAILED : "修改管理员失败",
+	CODE_GET_BLOGS_POST_BD_FAILED : "无法获取推送百度的文章",
+	CODE_GET_BLOGS_POST_BD_EMPTY : "获取推送百度的文章数为零",
+	CODE_BLOGS_POST_BD_FAILED : "文章推送百度失败",
+}

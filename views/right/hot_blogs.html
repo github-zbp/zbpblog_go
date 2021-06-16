@@ -1,0 +1,12 @@
+<div class="right-content">
+    <div class="right-head">
+        推荐文章
+    </div>
+    <ul class="right-ul">
+        {{range $hot_blog_index, $hot_blog := .global.hot_blogs}}
+        <li>
+            <span class="blog-type">{{$hot_blog.type}}</span><a href="/blog-{{$hot_blog.id}}.html" target="_blank">{{$hot_blog.title}}</a>
+        </li>
+        {{end}}
+    </ul>
+</div>

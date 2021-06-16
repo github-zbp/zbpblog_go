@@ -1,0 +1,113 @@
+<link rel="stylesheet" type="text/css" href="/statics/modal/css/jquery.my-modal.1.1.winStyle.css" />    <!-- 模态框的css -->
+<script type="text/javascript" src="/statics/modal/js/jquery.my-modal.1.1.js"></script>		<!-- 模态框的js -->
+<link rel="stylesheet"
+      href="/statics/css/zenburn.css" type="text/css">
+<script src="/statics/js/highlight.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<div id="container" data-id="{{.blog.id}}">
+	<div id="breadcrumb">
+		{{str2html .bread_crumb}}
+	</div>
+	<div class="c-left">
+		<div class="section-head">
+			正文内容
+		</div>
+		<div id="blog-art-box">
+			<div id="blog-art-head">
+				<h1>{{.blog.title}}</h1>
+			</div>
+			<div id="blog-art-info">
+				<span>栏目：<a href="/cate-{{.global.curCate.en_name}}">{{.global.curCate.zh_name}}</a></span>
+				<span>系列：{{if (.series_blogs|len)}}{{.series.name}}{{else}}无{{end}}</span>
+				<span>发布时间：{{.blog.create_time}}</span>
+				<span>浏览量：{{.blog.real_click}}</span>
+			</div>
+			<div class="blog-art-cont">
+			<div class="cont">
+				{{if (.series_blogs|len)}}
+				<div class="series-detail-cate">
+					<div class="series-detail-head">
+						<div class='series-detail-span'>本系列文章目录</div>
+						<div class='series-detail-span series-btn'>展开/收起</div>
+					</div>
+					<ul id="series-detail-list">
+						{{range $series_blogs_index, $sb := .series_blogs}}
+							<li><a href="/blog-{{$sb.id}}.html" target="_blank" title="{{$sb.title}}">{{$sb.title}}</a></li>
+						{{end}}
+					</ul>
+				</div>
+				{{end}}
+				<br/>
+				{{str2html .blog.content}}
+			</div>
+				
+				<div class="zhuanzai-box">
+				<p>
+					如果您需要转载,可以点击下方按钮可以进行复制粘贴;本站博客文章为原创,请转载时注明以下信息
+				</p>
+				<p class="banquan-info">
+					<a href="{{.global.seo.Domain}}">张柏沛IT技术博客</a> > <a href="{{.global.seo.Domain}}/blog-{{.blog.id}}.html">{{.blog.title}}</a>
+				</p>
+				<p style="text-align:center">
+					<button type="button" id="zz" class="btn btn-primary" style="width:200px;">点击复制转载该篇文章</button>
+				</p>
+			</div>
+			</div>
+
+			<div class="related_tags">
+				<span>相关标签：</span>
+				<ul class="related_tags_ul">
+				{{range $tag_index, $tag := .tags}}
+					<li class="float related_tags_li"><a href="/tag{{$tag.Id}}-{{$tag.Name}}" target="_blank">{{$tag.Name}}</a></li>
+				{{end}}
+				</ul>
+			</div>
+
+			<div class="neighbour">
+				<div class="neighbour-div neighbour-last">
+					<span>上一篇</span><br>
+					{{if .prev_blog}}
+					<a href="/blog-{{.prev_blog.id}}.html">{{.prev_blog.title}}</a>
+					{{end}}
+				</div>
+				<div class="neighbour-div neighbour-next">
+					<span>下一篇</span><br/>
+					{{if .next_blog}}
+					<a href="/blog-{{.next_blog.id}}.html">{{.next_blog.title}}</a>
+					{{end}}
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	{{template "right/right.html" .}}
+<div class="m-modal">	
+    <div class="m-middle2">
+    
+    </div>
+</div>
+<script>
+	$(function(){
+	
+		var m1 = new MyModal.modal();
+		
+		$(".cont").on("click","img",function(){
+            let src = $(this).attr("src")
+			$(".m-middle2").html(`<img src="${src}">`)
+			m1.show();
+		});
+        
+        $(".m-modal,.m-middle2").click(function(){
+            m1.hide();
+		})
+		
+		$(".series-btn").click(function(){
+			$("#series-detail-list").toggle()
+		})
+	})
+	
+</script>
+	<script src="/statics/js/clipboard.min.js"></script>
+	<script src="/statics/js/copy_blog.js"></script>
+</div>

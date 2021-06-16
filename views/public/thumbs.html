@@ -1,0 +1,103 @@
+<style>
+	.tag-imgs{
+		margin:5px;
+	}
+	
+	.tag-imgs.active{
+		border:2px solid skyblue;
+	}
+</style>
+<div class="modal fade" id="tagPicModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" style="width:678px">
+        
+        <div class="modal-body" >
+          <div class="modal-body-thumbs"></div>
+          <ul class="pagination">
+            <li class='prev'><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+            <li class='next'><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          <button type="button" class="btn btn-primary" id="checkTagPic">选择</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-warning" type="button" id="use-tagPic">使用图片库中的图片</button>
+  <button class="btn btn-danger" type="button" id="not-use-tagPic">取消使用图库图片</button>
+  <input type="hidden" name="tag_img" class="tag-img-input" value="">
+    <div style="position: relative;display: inline-block">
+        <img src="" id="show" width="200">
+        <i class="Hui-iconfont Hui-iconfont-del del_img"style=" font-size: 22px; position: absolute;top: -7px;right: -24px;color: red;z-index: 999;cursor: pointer;display: none"></i>
+    </div>
+<script>
+    var page = 1;
+    var p = 20;    // 每页的thumb数量
+    $(function(){
+
+      $(".tag-img-input").val($(".show-lib-img").attr("src"))
+        $("#use-tagPic").click(function(){
+            getBlogThumbs();
+        })
+
+        $("#not-use-tagPic").click(function(){
+            $(".tag-img-input").val("");
+            $(".show-lib-img").attr("src", "")
+        })
+
+        $(".pagination .next").click(function(){
+            if($('.modal-body-thumbs img').length < p){
+                return
+            }
+            page++;
+            console.log(page)
+            getBlogThumbs();
+        })
+
+        $(".pagination .prev").click(function(){
+            if(page == 1){
+                return
+            }
+            page--;
+            console.log(page)
+            getBlogThumbs();
+        })
+
+        $("#tagPicModal").on("click",".tag-imgs",function(){
+            $(".tag-imgs").removeClass("active");
+            $(this).addClass("active");
+        });
+
+        $("#checkTagPic").click(function(){
+            var tagPicSrc = $(".tag-imgs.active").attr("src");
+            if(tagPicSrc){
+                $(".tag-img-input").val(tagPicSrc);
+                $("#show").attr("src",tagPicSrc);
+                $("#tagPicModal").modal("hide");
+            }
+            
+        });
+    })
+    
+    function getBlogThumbs(){
+        $.get("/zbpadmin/common/getBlogThumbs",{page, p},function(d){
+            var html = ""
+            if(!d.errno && d.data.length>0){
+                data = d.data;
+                $.each(data,function(i,v){
+                    html+="<img src='"+v.thumb+"' class='tag-imgs' width='150' height='100'>"
+                })
+                $("#tagPicModal .modal-body-thumbs").html(html)
+                $("#tagPicModal").modal()
+            }else{
+                alert("未找到图片");
+            }
+        },"json");
+    }
+
+    
+
+
+</script>

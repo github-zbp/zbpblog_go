@@ -1,0 +1,15 @@
+<html>
+<head>
+
+</head>
+<body>
+    <script>
+        alert("{{.info}}")
+        {{if ne .redirect ""}}
+        location.href = "{{.redirect}}"
+        {{else}}
+        history.back()
+        {{end}}
+    </script>
+</body>
+</html>

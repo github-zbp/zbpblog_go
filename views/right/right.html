@@ -1,0 +1,13 @@
+<div class="c-right">
+    <div class="section-head">
+        热门推荐
+    </div>
+    {{if .global.hot_blogs}}
+        {{template "right/hot_blogs.html" .}}
+    {{end}}
+    {{if .global.relate_blogs}}
+    {{end}}
+    {{if .global.blogs_tags}}
+        {{template "right/blogs_tags.html" .}}
+    {{end}}
+</div>

@@ -1,0 +1,27 @@
+<div id="container">
+	<div class="c-all">
+		
+		<div class="tag-desc">
+			<div class="tag-title-box">所有标签<div></div></div>
+			
+			<p>
+				{{.global.seo.description}}
+			</p>
+		</div>
+	</div>
+	
+	<div class="all-tags">
+		<ul>
+			<div class="section-head">
+				博客标签
+			</div>
+			{{range $tag_index, $tag := .tags}}
+			<a href="/tag{{$tag.id}}-{{$tag.name}}">
+				<div class="float all-tags-li">
+					<strong>{{$tag.name}}</strong>{{if eq $tag.top "1"}}<div class="hot-tags"></div>{{end}}
+				</div>
+			</a>
+			{{end}}
+		</ul>
+	</div>
+</div>

@@ -1,0 +1,14 @@
+<div class="right-content">
+    <div class="right-head">
+        相关博客标签
+    </div>
+    <ul class="right-ul">
+        {{range $g_blogs_tags_index, $gbt := .global.blogs_tags}}
+        <a href="/tag{{$gbt.Id}}-{{$gbt.Name}}" target="_blank">
+            <li class="tags-li">
+                <b>{{$gbt.Name}}</b>{{if $gbt.Top}}<div class="hot-tags"></div>{{end}}
+            </li>
+        </a>
+        {{end}}
+    </ul>
+</div>

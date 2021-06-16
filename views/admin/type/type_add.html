@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://libs.useso.com/js/html5shiv/3.7/html5shiv.min.js"></script>
+<script type="text/javascript" src="http://libs.useso.com/js/respond.js/1.4.2/respond.min.js"></script>
+<script type="text/javascript" src="http://cdn.bootcss.com/css3pie/2.0beta1/PIE_IE678.js"></script>
+<![endif]-->
+<!--[if lt IE 9]>
+<script type="text/javascript" src="/lib/html5shiv.js"></script>
+<script type="text/javascript" src="/lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="/static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="/static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="/lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="/static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="/static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<!--[if IE 7]>
+<link href="http://www.bootcss.com/p/font-awesome/assets/css/font-awesome-ie7.min.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+<title>添加节点</title>
+<style>
+	
+</style>
+</head>
+<body>
+<div class="pd-20">
+  <div class="Huiform">
+	  <table class="table table-bg table-type">
+	  <form action="/zbpadmin/type/do_add" method="post">
+        <tbody>
+          <tr>
+            <th width="100" class="text-r"> 分类名称</th>
+            <td><input type="text" class="input-text" value="" placeholder="" id="user-name" name="name"></td>
+          </tr>
+          
+		  <tr>
+            <th class="text-r">选择父分类</th>
+            <td>
+				<span class="select-box">
+                  <select class="select" size="1" name="pid">
+                    <option value="0" selected>顶级分类</option>
+					{foreach $select_types as $k=>$v}
+						<option value="{$v['id']}">{$v['name']}</option>
+					{/foreach}
+				  </select>
+                </span>
+			</td>
+          </tr>
+		  
+		  <tr>
+            <th width="100" class="text-r"> 选择发送栏目</th>
+            <td>	
+				<select name="tid">
+				{foreach $cates as $k=>$v}
+					<option value="{$v['id']}">{$v['zh_name']}</option>
+				{/foreach}
+				</select>
+			</td>
+          </tr>
+		  
+		  <tr>
+            <th width="100" class="text-r"> 发送数量(不能超过200)</th>
+            <td><input type="text" class="input-text" value="" placeholder="" id="user-name" name="num" style="width:200px"></td>
+          </tr>
+		  
+		  <tr>
+            <th width="100" class="text-r"> 发送次数</th>
+            <td><input type="text" class="input-text" value="" placeholder="" id="user-name" name="times" style="width:200px"></td>
+          </tr>
+		  
+		  
+            <th></th>
+            <td><button class="btn btn-success radius" type="submit"><i class="icon-ok"></i> 确定</button></td>
+          </tr>
+        </tbody>
+		
+		</form>
+      </table>
+
+  </div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="/static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="/static/h-ui.admin/js/H-ui.admin.js"></script>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="/lib/laypage/1.2/laypage.js"></script>
+<script>
+	$(function(){
+		$(".add-starturls").click(function(){
+			var html = '<tr><th class="text-r"></th><td><input type="text"  class="input-text" value="" placeholder="" name="start_urls[]" style="width:70%"> <a class="btn btn-warning del-starturls">- </a></td></tr>'
+			$("#start-urls-tr").after(html);
+		})
+		
+		$("tbody").on("click",".del-starturls",function(){
+			$(this).parent().parent().remove();
+		})
+		
+		$("#sel-type").change(function(){
+			var type = $(this).val();
+			var url = "/index/node/add?type="+type;
+			location.href = url;
+			
+		})
+	})
+</script>
+<script type="text/javascript">
+$(".Huiform").Validform(); 
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?080836300300be57b7f34f4b3e97d911";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F080836300300be57b7f34f4b3e97d911' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</body>
+</html>

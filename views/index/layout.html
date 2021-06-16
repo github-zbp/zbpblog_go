@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>{{.global.seo.title}}</title>
+    <meta name="keywords" content="{{.global.seo.keywords}}" />
+    <meta name="description" content="{{.global.seo.description}}" />
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/statics/css/main.css"/>
+    <script type="text/javascript" src="/statics/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?4898023a3a963db158d0eeee27c56c80";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+</head>
+
+<body>
+<div class="header-box  pc">
+    <div class="header-inner">
+        <h1 class="header-logo">
+            <a href="/" rel="home"><img src="/statics/images/logo.jpg" alt="{{.global.seo.title}}" title="{{.global.seo.title}}" /></a>
+        </h1>
+        <div class="search-box">
+            <form class="search-form" action="/search" method="get">
+                <input type="hidden" value="" name="search_type" id="search-type-input">
+                {{/*
+                <div class="form-group">
+                    <select class="form-control" id="search-select" name="search_select" style="border-radius:0">
+                        <option value="blogs" type="1" {{if and .global.search_type  (eq .global.search_type "1")}}selected{{end}}>博客文章</option>
+                        <option value="blogs" type="2" {{if  and .global.search_type (eq .global.search_type "2")}}selected{{end}}>模板源码</option>
+                        <option value="blogs" type="3" {{if  and .global.search_type (eq .global.search_type "3")}}selected{{end}}>视频教程</option>
+                        <option value="article" type="" {{if eq .global.search_type ""}}selected{{end}}>新闻资讯</option>
+                    </select>
+                </div>
+                */}}
+                <div class="form-group">
+                    <input style="border-radius:0" name="kw" value="{{if .global.kw}}{{.global.kw}}{{end}}" type="text" class="form-control" id="search-input" placeholder="搜索关键词">
+                </div>
+
+                <button type="submit" id="search-btn" class="btn btn-primary">搜索</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="header-cate">
+        <ul id="header-cate-ul">
+            <a class="top-cate-a" href="/">
+                <li class="father-li float">
+                    首页
+                </li>
+            </a>
+            {{range $index, $value := .global.category}}
+            {{/*
+            <li class="father-li float">
+                <a href="#" class="father-a">
+                    {$cate2['zh_name']}
+                </a>
+
+                <ul class="header-cate-son">
+                    {foreach $cate2.soncat as $key => $val}
+                    <a href="/cate-{$val['en_name']}">
+                        <li class="son-li">
+                            {$val['zh_name']}
+                        </li>
+                    </a>
+                    {/foreach}
+                </ul>
+            </li>
+            */}}
+            <a href="/cate-{{$value.en_name}}">
+                <li class="father-li {{if $value.is_current}}active{{end}}">{{$value.zh_name}}</li>
+            </a>
+            {{end}}
+            {{/*
+            <a href="/about">
+                <li class="father-li">
+
+                    关于作者</li>
+            </a>
+            */}}
+        </ul>
+    </div>
+</div>
+
+<div class="mobile" style="height:70px"></div>
+
+<div class="header-box-mobile mobile">
+    <div class="header-mobile-img">
+        <a href="/"><img src="/statics/images/logo-no-word.jpg"></a>
+    </div>
+    <div class="header-mobile-btn">
+        <ul class="header-btn-ul">
+            <li class="mobile-search float"></li>
+            <li class="mobile-navbar float"></li>
+        </ul>
+    </div>
+</div>
+<div class="header-box-modal mobile">
+    <div class="header-box-btn">
+    </div>
+    <div class="header-box-right">
+        <ul class="header-box-ul">
+            <a href="/" rel="home">
+                <li class="">
+                    首页
+                </li>
+            </a>
+            {{range $index,$value := .global.category}}
+{{/*
+            {if $cate2.soncat && isset($cate2.soncat[0])}
+
+            <li class="">
+                <a href="#" class="father-a">
+                    {$cate2['zh_name']}
+                </a>
+
+                <ul class="header-box-sonul">
+                    <div class="mobile-close white-close"></div>
+                    {foreach $cate2.soncat as $key => $val}
+                    <a href="/cate-{$val['en_name']}">
+                        <li class="son-li">
+                            {$val['zh_name']}
+                        </li>
+                    </a>
+                    {/foreach}
+                </ul>
+            </li>
+
+            {else}
+*/}}
+            <a href="/cate-{{$value.en_name}}">
+                <li class="{{if $value.is_current}}active{{end}}">{{$value.zh_name}}</li>
+            </a>
+            {{end}}
+            {{/*
+            <a href="/about">
+                <li class="father-li">
+
+                    关于作者</li>
+            </a>
+            */}}
+        </ul>
+    </div>
+</div>
+
+<div class="search-modal mobile">
+    <div class="mobile-close black-close" style="width:20px;height:20px"></div>
+    <div class="mobile-search-form-box">
+        <form class="mb-search-form" action="/search" method="get">
+            <input type="hidden" value="" name="search_type" id="mb-search-type-input">
+            {{/*
+            <div class="form-group">
+                <select class="form-control" id="mb-search-select" name="search_select" style="border-radius:0">
+                    <option value="blogs" type="1" {{if and .global.search_type  (eq .global.search_type "1")}}selected{{end}}>博客文章</option>
+                    <option value="blogs" type="2" {{if  and .global.search_type (eq .global.search_type "2")}}selected{{end}}>模板源码</option>
+                    <option value="blogs" type="3" {{if  and .global.search_type (eq .global.search_type "3")}}selected{{end}}>视频教程</option>
+                    <option value="article" type="" {{if eq .global.search_type ""}}selected{{end}}>新闻资讯</option>
+                </select>
+            </div>
+            */}}
+            <div class="form-group">
+                <input style="border-radius:0" name="kw" value="{{if .global.kw}}{{.global.kw}}{{end}}" type="text" class="form-control" id="mb-search-input" placeholder="搜索关键词">
+            </div>
+
+            <button type="submit" id="mb-search-btn" class="btn btn-primary">搜索</button>
+        </form>
+        <script>
+
+        </script>
+    </div>
+</div>
+
+{{.LayoutContent}}
+<div style="clear:both;"></div>
+<div id="footer">
+    <div class="footer-inner">
+        <div class="footer-logo">
+            {{/*
+            <a href="/" rel="home">
+                <img src="/statics/images/logo.jpg" title="" alt=""/>
+            </a>
+            */}}
+        </div>
+        <div class="footer-cate pc">
+            <ul>
+                {{range $index,$value := .global.category}}
+
+                <li class="footer-cate-li float">
+                    <a href="/cate-{{$value.en_name}}" target="blank">{{$value.zh_name}}</a>
+                </li>
+                {{end}}
+                {{/*
+                <li class="footer-cate-li float">
+                    <a href="/about" target="blank">关于作者</a>
+                </li>
+                */}}
+            </ul>
+
+
+        </div>
+
+    </div>
+    <center id="ba">张柏沛的个人IT技术博客 © www.zbpblog.com - <a href="http://beian.miit.gov.cn" target="_blank">粤ICP备19143107号</a><br/><a href="/sitemap.xml" title="网站地图" target="_blank">网站地图</a></center>
+
+</div>
+
+<script type="text/javascript" src="/statics/js/jquery.lazyload.js"></script>
+<script type="text/javascript" src="/statics/js/main.js"></script>
+
+</body>
+</html>

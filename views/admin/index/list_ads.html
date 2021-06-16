@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="/statics/admin/lib/html5shiv.js"></script>
+    <script type="text/javascript" src="/statics/admin/lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="/statics/admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui.admin/css/style.css" />
+
+    <!--[if IE 6]>
+    <script type="text/javascript" src="/statics/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>广告列表</title>
+</head>
+
+<body class="pos-r">
+
+<div>
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span>广告管理 <span class="c-gray en">&gt;</span> 广告列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+    <div class="page-container">
+        <div class="cl pd-5 bg-1 bk-gray mt-20">
+			<span class="l">
+				<a href="javascript:;"  class="btn btn-danger radius del_many"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+				<a class="btn btn-primary radius" onclick="article_add('添加文章','{:url(\'admin/index/add\',[\'model\'=>\'ads\'])}')" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加广告</a>
+			</span>
+            <span class="r">共有数据：<strong></strong> 条</span> </div>
+        <div class="mt-20">
+            <table class="table table-border table-bordered table-bg table-hover table-sort">
+                <thead>
+                <tr class="text-c">
+                    <th width="15"><input name="" type="checkbox" value=""></th>
+                    <th width="40" data-name="id" data-sort="0">ID</th>
+                    <th width="100">文本</th>
+                    <th width="100">链接</th>
+                    <th width="100">位置</th>
+                    <th width="100">图片</th>
+                    <th width="100">点击次数</th>
+                    <th width="100">起止时间</th>
+                    <th width="100">状态</th>
+                    <th width="100">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="links" id="vo"}
+                <tr class="text-c va-m">
+                    <td><input name="" type="checkbox" value=""></td>
+                    <td>{$vo.id}</td>
+                    <td>{$vo.ad_name}</td>
+                    <td>{$vo.url}</td>
+                    <td>{$vo.des_position}</td>
+                    <td><img src="{$vo.thumb}" width="100"></td>
+                    <td>{$vo.click}</td>
+                    <td>{$vo.start_time|date="Y-m-d"}-{$vo.end_time|date="Y-m-d"}</td>
+                    <td>{$vo.status?'√':'x'}</td>
+                    <td class="td-manage"><a class="status" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a><a style="text-decoration:none" class="ml-5 edit"  href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <a style="text-decoration:none" class="ml-5 del"  href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="/statics/admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="/statics/admin/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="/statics/admin/lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="/statics/admin/static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="/statics/admin/static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+
+<script type="text/javascript" src="/statics/admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/statics/admin/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+
+    $('.table-sort').dataTable({
+        "aaSorting": [[ 1, "desc" ]],//默认第几个排序
+        "bStateSave": true,//状态保存
+        "aoColumnDefs": [
+            {"orderable":false,"aTargets":[0,9]}// 制定列不参与排序
+        ]
+    });
+
+    /*产品-审核*/
+    $('.status').bind('click',status)
+    function status() {
+        var obj = $(this).parents('tr').find('td').eq(8)
+        var status = obj.text();
+        var id = $(this).parents('tr').find('td').eq(1).text();
+        var text = (status=='√')?'x':'√';
+        var status = (status=='√')?0:1;
+
+        var data = {'model':'ads','id':id,'status':status}
+        if(status == 1){
+            var msg = '确认审核通过吗？';
+        }else{
+            var msg = '确认下架吗？';
+        }
+        layer.alert(msg,function(index) {
+            $.post('{:url(\'admin/index/status\')}',data,function(result) {
+                layer.close(index);
+                if(result == 1){
+                    layer.msg('修改成功');
+                    obj.text(text);
+                }else{
+                    layer.msg('修改失败');
+                }
+
+            },'JSON')
+
+        });
+    }
+
+    /*添加*/
+    function article_add(title,url){
+        var index = layer.open({
+            type: 2,
+            title: '增加广告',
+            content: url,
+            area:['800px','600px']
+        });
+    }
+
+
+    $('.edit').bind('click',edit)
+    /*产品-编辑*/
+    function edit(){
+        var id = parseInt($(this).parents('tr').find('td').eq(1).text());
+
+        var index = layer.open({
+            type: 2,
+            title: '广告修改',
+            content: '{:url("admin/index/edit")}'+'?model=ads&id='+id,
+            area:['800px','600px']
+        });
+
+    }
+
+    /*产品-删除*/
+    $('.del').bind('click',del)
+
+    /*批量删除*/
+    $('.del_many').click(function () {
+        var id = [];
+        $.each($('table tr.va-m'),function (k,v) {
+            var status = $(this).find('td').eq(0).children('input').is(':checked');
+            if(status == true){
+                id.push(parseInt($(this).find('td').eq(1).text()));
+            }
+        });
+        layer.alert('确认批量删除吗？',function (index) {
+            $.post('admin/index/del',{model:'ads',id:id},function (result) {
+                layer.close(index);
+                if(result ==1){
+                    layer.msg('删除成功！',{icon:1,time:1500})
+                    setInterval(function () {
+                        location.reload();
+                    },1500)
+                }
+            },'json')
+                .error(function () {
+                    layer.alert('系统错误，请联系管理员');
+                })
+        })
+
+    })
+
+    function del(){
+        var id = $(this).parents('tr').find('td').eq(1).text();
+        var tr = $(this).parents('tr');
+        var data = {'model':'ads','id':id}
+        layer.alert('确定删除吗？',function(index) {
+                $.post('{:url("admin/index/del")}',data,function(result) {
+                    layer.close(index);
+                    if(result == 1){
+                        layer.msg('删除成功',{'icon':1});
+                        $(tr).remove();
+                    }
+                },'json')
+                    .error(function () {
+                        layer.alert('系统错误，请联系管理员');
+                    })
+
+            }
+        )
+    }
+
+</script>
+
+</body>
+</html>

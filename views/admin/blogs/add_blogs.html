@@ -1,0 +1,387 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML> 
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="Bookmark" href="/favicon.ico" >
+    <link rel="Shortcut Icon" href="/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="/statics/admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui.admin/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="/statics/css/admin_blog.css"/>
+    <title>添加博客 - 资讯管理 </title>
+</head>
+<body>
+
+<div class="modal fade" id="tagPicModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="width:678px">
+      
+      <div class="modal-body" >
+        
+      </div>
+      <div class="modal-footer">
+		<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="checkTagPic">选择</button>
+      </div>
+    </div>
+  </div>
+</div>
+<article class="page-container">
+    <!-- <form class="form form-horizontal" action="/zbpadmin/blogs/doadd" method="post" id="form-article-add" enctype="multipart/form-data"> -->
+    <form class="form form-horizontal" id="form-article-add" >
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章标题：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" name="title" id="title">
+                
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>分类栏目：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+			
+				<select name="tid" class="select" id="tid">
+					<option value="0">请选择栏目</option>
+					{{range $cate_index, $cate := .categories}}
+					<option value="{{$cate.id}}">{{$cate.zh_name}}</option>
+					{{end}}
+				</select>
+				</span> </div>
+        </div>
+       
+       <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章类型：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+			
+				<select name="type" class="select" id="type">
+					<option value="1" selected>文章</option>
+					<option value="2">视频</option>
+					<option value="3">模板</option>
+				</select>
+				</span> </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">选择系列</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="select-series">
+                <div id='select-series-box'>
+                    <div class="series-box">
+                    </div>
+                    <div clsss="series-reset">
+                        <button type="button" class="btn btn-primary" id="series-reset-btn">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">关键词：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" name="keywords">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">文章摘要：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea name="description" cols="" rows="" class="textarea"  placeholder="默认截取正文前50个字" datatype="*10-100" dragonfly="true" nullmsg="备注不能为空！" ></textarea>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章作者：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" name="writer">
+            </div>
+        </div>
+		
+		<div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>选择标签：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                {{range $tag_index, $tag := .tags}}
+				<label>
+					<input type="checkbox" class="tag-checkbox" value="{{$tag.id}}" name="tags_id[]"> {{$tag.name}}
+				</label>
+				{{end}}
+            </div>
+        </div>
+		
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">缩略图：</label>
+            <div class="formControls col-xs-8 col-sm-9" style="overflow: hidden">
+                <a href="javascript:void();" class="btn btn-primary radius btn-upload"><i class="Hui-iconfont">&#xe642;</i> 浏览文件</a>
+                <input type="file"  name="thumb" class="input-file filepath"  onchange="changepic(this)" id="file" style="display:none">
+				<button class="btn btn-warning" type="button" id="use-tagPic">使用标签图片</button>
+                <input type="hidden" name="del_img" value="0">
+				<input type="hidden" name="tag_img" class="tag-img-input" value="">
+                <div style="position: relative;display: inline-block">
+                    <img src="" id="show" width="200">
+                    <i class="Hui-iconfont Hui-iconfont-del del_img" style=" font-size: 22px; position: absolute;top: -7px;right: -24px;color: red;z-index: 999;cursor: pointer;display: none"></i>
+                </div>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>文章内容：</label>
+            <div class="formControls col-xs-8 col-sm-9" id="content">
+				<textarea class="form-control" name="content" id="k_text" rows="28"></textarea>
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                <button  class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存并提交审核</button>
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                <div class="Hui-tags">
+                    <div class="Hui-tags-editor cl">
+                        <i class="Hui-tags-icon Hui-iconfont">&#xe64b;</i>
+                        <span class="Hui-tags-token">F-web管理系统</span>
+                        <span class="Hui-tags-token">description</span>
+                        <span class="Hui-tags-token">thumb</span>
+                    </div>
+                    <div class="Hui-tags-list">
+                        <div class="Hui-notag" style="display:none">暂无常用标签</div>
+                        <div class="Hui-tags-has"><span>文章简介不编辑默认选取正文前60个汉字</span><br>
+                            <span>不上传缩略图默认选取正文中第一张图片</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</article>
+<style>
+	.tag-imgs{
+		margin:5px;
+	}
+	
+	.tag-imgs.active{
+		border:2px solid skyblue;
+	}
+</style>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="/statics/admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="/statics/admin/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="/statics/admin/static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="/statics/admin/static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer /作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+
+<script type="text/javascript" src="/statics/admin/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="/statics/admin/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="/statics/admin/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="/statics/admin/lib/webuploader/0.1.5/webuploader.min.js"></script>
+<script type="text/javascript" src="/statics/admin/static/cke/ckeditor/ckeditor.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        if($('#show').attr('src').length){
+           $('.del_img').show(200);
+        }
+    })
+	
+	$(".btn-upload").click(function(){
+		$("#file").click();
+	});
+	
+    $('.del_img').click(function () {
+        document.getElementById('show').src='';
+        $('.del_img').hide(0);
+        $("input[name='del_img']").val(1);
+    })
+	$("#use-tagPic").click(function(){
+		var tag_ids = []
+		$(".tag-checkbox:checked").each(function(){
+			tag_ids.push($(this).val())
+		})
+		$.post("/zbpadmin/blogs/getTagsPic",{tag_ids},function(d){
+			var html = ""
+			if(!d.errno && d.data.length>0){
+				data = d.data;
+				$.each(data,function(i,v){
+					html+="<img src='"+v+"' class='tag-imgs' width='150' height='100'>"
+				})
+				$("#tagPicModal .modal-body").html(html)
+				$("#tagPicModal").modal()
+			}else{
+				alert("未找到图片");
+			}
+		},"json");
+	})
+	
+	$("#tagPicModal").on("click",".tag-imgs",function(){
+		$(".tag-imgs").removeClass("active");
+		$(this).addClass("active");
+	});
+	
+	$("#checkTagPic").click(function(){
+		var tagPicSrc = $(".tag-imgs.active").attr("src");
+		if(tagPicSrc){
+			$(".tag-img-input").val(tagPicSrc);
+			$("#show").attr("src",tagPicSrc);
+			$("#tagPicModal").modal("hide");
+		}
+		
+    });
+    function unuseSeries(){
+        $(".series-label input").removeAttr('checked')
+        $("#show").attr('src', '')
+        $(".tag-img-input").val('')
+    }
+    function useSeries(radio){
+        $("#show").attr('src', radio.attr('data-thumb'))
+        $(".tag-img-input").val(radio.attr('data-thumb'))
+    }
+    $(function(){
+        $("#series-reset-btn").click(function(){
+            unuseSeries()
+        })
+
+        $('.series-box').on('click', 'input', function(){
+            if(this.checked){
+                useSeries($(this))
+            }
+        })
+
+        $('#select-series').change(function(){
+            var search = $(this).val().trim()
+            if(!search){
+                unuseSeries()
+                $('#select-series-box').hide()
+                return
+            }
+
+            $.get('/zbpadmin/series/search', {search}, function(d){
+                var html = ""
+                if(!d.errno && d.data.length>0){
+                    data = d.data;
+                    $.each(data,function(i,v){
+                        html+=`<label class='series-label'><input name="series_id" value='${v.id}' data-thumb="${v.thumb}" type="radio">${v.name}</label>`
+                    })
+                    $(".series-box").html(html)
+                    $('#select-series-box').show()
+                }else{
+                    $('#select-series-box').hide()
+                }
+            },"json")
+        })
+
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+
+		$("#form-article-add").submit(()=>false);
+        //表单验证
+        $("#form-article-add").validate({
+            rules:{
+                title:{
+                    required:true,
+                },
+                tid:{
+                    min:1,
+                },
+                position:{
+                    required:true,
+                },
+                writer:{
+                    required:true,
+                },
+
+            },
+            onkeyup:false,
+            focusCleanup:true,
+            success:"valid",
+            submitHandler:function(form){
+                var option = {
+                    url:'/zbpadmin/blogs/doadd',
+                    type:'post',
+                    beforeSubmit:function(data){
+                        var content = myeditor.document.getBody().getHtml();
+						console.log(content);
+						
+                        if(content.length == 0){
+                            layer.msg('请填写正文！');
+                            return false;
+                        }
+                        $.each(data,function (k,val) {
+                            if(val['name'] == 'content'){
+                                data[k].value = content;
+                            }
+                        });
+                        data.push({name:"model",value:'blogs'});
+                        data.push({name:"is_update",value:1});
+						
+                    }, 
+                    success:function(result){
+                        if(result['errno'] == 0){
+                            layer.msg('新增博客成功',{icon:1,time:1500});
+                            setInterval(function () {
+                                location.href=location.href
+                            },1500)
+                        }else{
+                            layer.msg(result['code']+"->"+result['msg']);
+                        }
+                    },
+                    error:function(){
+                        layer.alert('系统或网络错误，请联系管理员！');
+                    },
+                    dataType:'json',　　　　　　　//服务器返回数据类型
+                }
+                $(form).ajaxSubmit(option);
+            }
+        });
+
+    });
+	$(function(){
+		//以前的kindEditor编辑器已废弃,换成了cke编辑器
+        //KindEditor.ready(function(K) {
+        //    window.editor = K.create('#editor_id',{
+        //    });
+        //});
+		myeditor = CKEDITOR.replace('k_text', {
+        extraPlugins: 'codesnippet',codeSnippet_theme: 'zenburn',
+        uiColor: '#CCEAEE', 
+        filebrowserBrowseUrl :  '/statics/admin/static/cke/ckfinder/ckfinder.html',
+		filebrowserImageBrowseUrl :  '/statics/admin/static/cke/ckfinder/ckfinder.html?Type=Images',
+		filebrowserFlashBrowseUrl :  '/statics/admin/static/cke/ckfinder/ckfinder.html?Type=Flash',
+		filebrowserUploadUrl :  '/statics/admin/static/cke/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+		filebrowserImageUploadUrl  :  '/statics/admin/static/cke/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+		filebrowserFlashUploadUrl  :  '/statics/admin/static/cke/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash',
+        height: 620
+    });
+		
+		// 获得拖拽文件的回调函数
+		function getDropFileCallBack (dropFiles) {
+			console.log(dropFiles, dropFiles.length);
+		}
+	})
+    function changepic() {
+        var reads= new FileReader();
+        f=document.getElementById('file').files[0];
+        reads.readAsDataURL(f);
+        reads.onload=function (e) {
+            document.getElementById('show').src=this.result;
+        };
+        $("input[name='del_img']").val(0);
+		$(".tag-img-input").val("");
+    }
+    function closeSelf() {
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.location.reload();
+        parent.layer.close(index);
+    }
+</script>
+
+
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

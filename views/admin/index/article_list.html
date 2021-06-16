@@ -1,0 +1,387 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="/statics/admin/lib/html5shiv.js"></script>
+<script type="text/javascript" src="/statics/admin/lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="/statics/admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui.admin/css/style.css" />
+
+<!--[if IE 6]>
+<script type="text/javascript" src="/statics/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>文章列表</title>
+</head>
+<style>
+	.table-sort thead tr th{
+		background-repeat: no-repeat;
+		background-position: right center;
+	}
+	ul.pagination.page li {
+		display: inline-block;
+		border: 1px solid #ececec;
+		width: 35px;
+		height: 35px;
+		text-align: center;
+		line-height: 35px;
+		margin-right: 14px;
+		transition: 0.1s;
+	}
+	a{
+		text-decoration: none!important;
+	}
+	ul.pagination.page li:last-child{
+		margin-right: 0;
+	}
+	ul.pagination.page li.active{
+		background: #0e90d2;
+		color: white;
+	}
+	ul.pagination.page {
+		float: right;
+		margin-top: 30px;
+	}
+	.table-sort td{
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+</style>
+<body class="pos-r">
+
+<div>
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 文章管理 <span class="c-gray en">&gt;</span> 文章列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+	<div class="page-container">
+		<div class="cl pd-5 bg-1 bk-gray mt-20">
+			<span class="l">
+				<a href="javascript:;"  class="btn btn-danger radius del_many"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+				<a class="btn btn-primary radius" onclick="article_add('添加文章','{:url(\'admin/index/add\',[\'model\'=>\'article\'])}')" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加文章</a>
+				<span class="select-box inline">
+					<select name="" class="select cate" id="cate">
+						<option value="0" selected>选择栏目</option>
+						{volist name="data.cate" id="cate"}
+							<option value="{$cate.id}">{$cate.zh_name}</option>
+							{/if}
+						{/volist}
+					</select>
+				</span>
+				<span class="select-box inline">
+					<select name="nums" class="select" id="nums">
+						<option value="10">10</option>
+						<option value="25">25</option>
+						<option value="50">50</option>
+						<option value="100">100</option>
+					</select>
+				</span>
+				<span class="search">
+					<input type="text" placeholder="请输入关键词" class="input-text ac_input" name="search_text" value="" id="search_text" autocomplete="off" style="width:300px">
+					<button type="submit" class="btn btn-default" id="search_button">搜索</button>
+				</span>
+				<a href="javascript:;"  class="btn btn-danger radius sitemap">更新sitemap</a>
+				<a href="javascript:;"  class="btn btn-danger radius post_baidu">百度主动推送</a>
+			</span>
+			<span class="r">共有数据：<strong>{$data['count']}</strong> 条</span> </div>
+		<div class="mt-20">
+			<table class="table table-border table-bordered table-bg table-hover table-sort">
+				<thead>
+					<tr class="text-c">
+						<th width="15"><input name="" type="checkbox" value=""></th>
+						<th width="40" data-name="id" data-sort="0">ID</th>
+						<th width="100">栏目</th>
+						<th width="100">标题</th>
+						<th width="100" data-name="create_time" data-sort="0">发布时间</th>
+						<th width="100">作者</th>
+						<th width="60" data-name="status" data-sort="0">状态</th>
+						<th width="100">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{volist name="data.article" id="vo"}
+                    <tr class="text-c va-m">
+						<td><input name="" type="checkbox" value=""></td>
+						<td>{$vo.id}</td>
+						<td>{$vo.cate.zh_name}</td>
+						<td><a target="_blank" href="javascript:;">{$vo.title}</a></td>
+						<td>{$vo.create_time}</td>
+						<td>{$vo.writer}</td>
+						<td class="td-status">{$vo.status?'√':'x'}</td>
+						<td class="td-manage"><a class="status" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> <a style="text-decoration:none" class="ml-5 edit"  href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <a style="text-decoration:none" class="ml-5 del"  href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+					</tr>
+					{/volist}
+				</tbody>
+			</table>
+		</div>
+	<div class="page">{$page|raw}</div>
+	</div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="/statics/admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="/statics/admin/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="/statics/admin/lib/jquery.cookie.js"></script>
+<script type="text/javascript" src="/statics/admin/static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="/statics/admin/static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+
+<script type="text/javascript" src="/statics/admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/statics/admin/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+
+// $('.table-sort').dataTable({
+// 	"aaSorting": [[ 1, "desc" ]],//默认第几个排序
+// 	"bStateSave": true,//状态保存
+// 	"aoColumnDefs": [
+// 	  {"orderable":false,"aTargets":[0,7]}// 制定列不参与排序
+// 	]
+// });
+/*添加*/
+function article_add(title,url){
+	var index = layer.open({
+		type: 2,
+		title: title,
+		content: url,
+	});
+	layer.full(index)
+
+}
+
+/*产品-审核*/
+$('.status').bind('click',status)
+function status() {
+    var obj = $(this).parents('tr').find('td').eq(6)
+    var status = obj.text();
+    var id = $(this).parents('tr').find('td').eq(1).text();
+    var text = (status=='√')?'x':'√';
+    var status = (status=='√')?0:1;
+
+  var data = {'model':'article','id':id,'status':status}
+  if(status == 1){
+      var msg = '确认审核通过吗？';
+  }else{
+     var msg = '确认下架吗？';
+  }
+  layer.alert(msg,function(index) {
+            $.post('{:url(\'admin/index/status\')}',data,function(result) {
+                layer.close(index);
+                  if(result == 1){
+                      layer.msg('修改成功');
+                      obj.text(text);
+                  }else{
+                      layer.msg('修改失败');
+                  }
+
+            },'JSON')
+
+        });
+}
+
+
+$('.edit').bind('click',edit)
+/*产品-编辑*/
+function edit(){
+	var id = parseInt($(this).parents('tr').find('td').eq(1).text());
+
+	var index = layer.open({
+		type: 2,
+		title: '文章编辑',
+		content: '{:url("admin/index/edit")}'+'?model=article&id='+id,
+	});
+	layer.full(index);
+}
+
+/*产品-删除*/
+$('.del').bind('click',del)
+
+/*批量删除*/
+$('.del_many').click(function () {
+	var id = [];
+	 $.each($('table tr.va-m'),function (k,v) {
+		 var status = $(this).find('td').eq(0).children('input').is(':checked');
+		 if(status == true){
+		 	id.push(parseInt($(this).find('td').eq(1).text()));
+		 }
+	 });
+	 layer.alert('确认批量删除吗？',function (index) {
+		 $.post('admin/index/del',{model:'article',id:id},function (result) {
+			 layer.close(index);
+			 if(result ==1){
+			 	layer.msg('删除成功！',{icon:1,time:1500})
+				 setInterval(function () {
+					 location.reload();
+				 },1500)
+			 }
+		 },'json')
+				 .error(function () {
+					 layer.alert('系统错误，请联系管理员');
+				 })
+	 })
+
+})
+
+function del(){
+	var id = $(this).parents('tr').find('td').eq(1).text();
+	var tr = $(this).parents('tr');
+	var data = {'model':'article','id':id}
+	layer.alert('确定删除吗？',function(index) {
+		$.post('{:url("admin/index/del")}',data,function(result) {
+			layer.close(index);
+			if(result == 1){
+				layer.msg('删除成功',{'icon':1});
+				$(tr).remove();
+			}
+		},'json')
+				.error(function () {
+					layer.alert('系统错误，请联系管理员');
+				})
+
+		}
+	)
+}
+$('.sitemap').click(function () {
+	var index = layer.msg('正在更新sitemap，请等待', {
+		icon: 16,
+		shadeClose: false,
+		shade: 0.4,
+		time: 0
+	});
+	$.post('{:url("admin/index/update_sitemap")}',{code:1},function(result) {
+		layer.close(index);
+		if(result == 1){
+			layer.msg('更新成功',{'icon':1});
+		}
+	},'json')
+			.error(function () {
+				layer.alert('系统错误，请联系管理员');
+			})
+})
+$('.post_baidu').click(function () {
+	var index = layer.msg('正在进行百度主动推送，请等待', {
+		icon: 16,
+		shadeClose: false,
+		shade: 0.4,
+		time: 0
+	});
+	$.post('{:url("admin/index/post_baidu")}',{code:1},function(result) {
+		layer.close(index);
+		if(result){
+			layer.msg('推送成功'+result+'篇文章',{'icon':1});
+		}
+	},'json')
+			.error(function () {
+				layer.alert('系统错误，请联系管理员');
+			})
+})
+</script>
+<script>
+	var sort_bg = {
+		both:'/statics/admin/static/h-ui/images/dataTable/sort_both.png',
+		asc:'/statics/admin/static/h-ui/images/dataTable/sort_asc.png',
+		desc:'/statics/admin/static/h-ui/images/dataTable/sort_desc.png',
+	};
+	var sort = [1,4,6];
+	var order = '';
+	var way = '';
+	var nums = 10;
+	var search = '';
+	var now = 1;
+	$(function () {
+		$.each(sort,function (k,v) {
+			$('.table-sort thead tr th').eq(v).css('background-image','url('+sort_bg.both+')').bind('click',function () {
+				 order = $(this).attr('data-name');
+				 way = parseInt($(this).attr('data-sort'));
+				switch (way) {
+					case 0:
+						way=1;
+						reset();
+						$(this).css('background-image','url('+sort_bg.asc+')');
+						break;
+					case 1:
+						way = -1;
+						reset();
+						$(this).css('background-image','url('+sort_bg.desc+')');
+						break;
+					case -1:
+						way = 1;
+						reset();
+						$(this).css('background-image','url('+sort_bg.asc+')');
+						break;
+				}
+				now =  1;
+				$(this).attr('data-sort',way);
+				sortTable();
+			});
+		})
+	})
+	function sortTable() {
+		var tid = $('#cate').val();
+		var data = {order:order,way:way,nums:nums,search:search,now:now,tid:tid};
+		//保存cookie
+		$.each(data,function (k,v) {
+			$.cookie(k,v);
+		})
+		$.post('{url:("admin/index/article_list")}',data,function (result) {
+			$('div.page').html(result['page']);
+			$('.pagination li').bind('click',page);
+			$('.table-sort tbody').empty();
+			$.each(result.data.article,function (key,val) {
+				$('.table-sort tbody').append(
+						'<tr class="text-c va-m">\n' +
+						'<td><input name="" type="checkbox" value=""></td>\n' +
+						'<td>'+val['id']+'</td>\n' +
+						'<td>'+val.cate.zh_name+'</td>\n' +
+						'<td><a target="_blank" href="javascript:;">'+val.title+'</a></td>\n' +
+						'<td>'+val.create_time+'</td>\n' +
+						'<td>'+val.writer+'</td>\n' +
+						'<td class="td-status">'+(val.status==1?'√':'x')+'</td>\n' +
+						'<td class="td-manage"><a class="status" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> <a style="text-decoration:none" class="ml-5 edit" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <a style="text-decoration:none" class="ml-5 del"  href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>\n' +
+						'</tr>'
+				)
+			})
+			$('.del').bind('click',del);
+			$('.status').bind('click',status);
+			$('.edit').bind('click',edit);
+		})
+	}
+	function reset() {
+		$.each(sort,function (k,v) {
+			$('.table-sort thead tr th').eq(v).css('background-image', 'url(' + sort_bg.both + ')').attr('data-sort',0);
+		})
+	}
+	$('#search_button').bind('click',function () {
+		search = $('#search_text').val();
+		now =1;
+		sortTable();
+	})
+	$('#nums').change(function () {
+		nums = $(this).val();
+		search = $('#search_text').val();
+		now =1;
+		sortTable();
+	})
+
+	$('.cate').change(function () {
+		now = 1;
+		sortTable();
+	})
+	$('.pagination li').bind('click',page);
+	function page() {
+		if(!$(this).hasClass('active')){
+			now = $(this).text();
+			if(now == '...') return false;
+			sortTable();
+		}
+
+	}
+</script>
+</body>
+</html>

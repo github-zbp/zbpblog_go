@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="/statics/admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui.admin/css/style.css" />
+<script type="text/javascript" src="/statics/admin/lib/jquery/1.9.1/jquery.min.js"></script> 
+<title>添加文章系列</title>
+<style>
+	
+</style>
+</head>
+<body>
+<div class="pd-20">
+  <div class="Huiform">
+	  <table class="table table-bg table-type">
+	  <form action="/zbpadmin/series/doadd" method="post" enctype="multipart/form-data">
+        <tbody>
+          <tr>
+            <th width="100" class="text-r"> 文章系列名称</th>
+            <td><input type="text" class="input-text" value="" placeholder=""  name="name"></td>
+          </tr>
+		  
+		  <tr>
+            <th width="100" class="text-r"> 缩略图</th>
+            <td>
+				<input type="file"  name="thumb" onchange="changepic(this)" id="file" >
+				<img src="" class="show-lib-img" id="show" width="200">
+			</td>
+		  </tr>
+		  
+		  <tr>
+            <th width="100" class="text-r"></th>
+            <td>
+                {{template "public/thumbs.html" .}}
+			</td>
+          </tr>
+		  
+            <th></th>
+            <td><button class="btn btn-success radius" type="submit"><i class="icon-ok"></i> 确定</button></td>
+          </tr>
+        </tbody>
+		
+		</form>
+      </table>
+
+  </div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="/statics/admin/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="/statics/admin/static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="/statics/admin/static/h-ui.admin/js/H-ui.admin.js"></script>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="/statics/admin/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="/statics/admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="/statics/admin/lib/laypage/1.2/laypage.js"></script>
+<script>
+	$(function(){
+		function changepic() {
+			var reads= new FileReader();
+			f=document.getElementById('file').files[0];
+			reads.readAsDataURL(f);
+			reads.onload=function (e) {
+				document.getElementById('show').src=this.result;
+			};
+			
+		}
+	})
+</script>
+</body>
+</html>

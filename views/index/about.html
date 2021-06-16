@@ -1,0 +1,21 @@
+<div id="container">
+	<div id="breadcrumb">
+		所在位置：<a href="/">首页</a> > <a href="/about">关于作者</a> </div>
+	
+	<div class="c-left">
+		
+		<div id="blog-art-box">
+			<div id="blog-art-head">
+				<h1>关于作者</h1>
+			</div>
+			<div class="blog-art-cont">
+			<div class="cont" style="line-height:30px;font-size:16px">
+				{{str2html .about}}
+			</div>
+
+			</div>
+
+		</div>
+	</div>
+	{{template "right/right.html" .}}
+</div>

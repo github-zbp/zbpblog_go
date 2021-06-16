@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="/statics/admin/lib/html5shiv.js"></script>
+    <script type="text/javascript" src="/statics/admin/lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="/statics/admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="/statics/admin/static/h-ui.admin/css/style.css" />
+    <!--[if IE 6]>
+    <script type="text/javascript" src="/statics/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>栏目分类</title>
+
+</head>
+
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 文章管理 <span class="c-gray en">&gt;</span> 文章分类 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"> <a href="javascript:;" onclick="type_add('添加栏目','/zbpadmin/category/add')" class="btn btn-primary radius"><i class="Hui-iconfont"></i> 添加栏目</a></span> </div>
+<table class="table  table-bg table-border table-hover">
+    <thead>
+    <tr class="text-c">
+        <th width="25">排序</th>
+        <th width="40">栏目id</th>
+        <th width="150">栏目名称</th>
+        <th width="150">英文名称</th>
+        <th width="130">文章数量</th>
+        <th width="100">状态</th>
+        <th width="100">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{range $cate_index, $cate := .cates}}
+    <tr class="text-c data">
+        <td><input class="input-text" type="number" value="{{$cate.order}}" name="order" style="width: 45px"></td>
+        <td>{{$cate.id}}</td>
+        <td>{{$cate.zh_name}}</td>
+        <td>{{$cate.en_name}}</td>
+        <td>{{index (index $.blog_nums $cate.id) "num"}}</td>
+        <td>{{if eq $cate.status "1"}}正常{{else}}已禁用{{end}}</td>
+        <td class="td-manage">
+            <a style="text-decoration:none" class="status" data-model="category" data-id="{{$cate.id}}" data-status="{{$cate.status}}" href="javascript:;" title=""><i class="Hui-iconfont">&#xe6de;</i></a>
+            <a style="text-decoration:none" class="ml-5" onClick="type_edit('/zbpadmin/category/edit?id={{$cate.id}}')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a>
+            <a style="text-decoration:none" class="ml-5 del" href="/zbpadmin/common/del?id={{$cate.id}}&model=category" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+        </td>
+    </tr>
+    {{end}}
+
+    </tbody>
+
+</table>
+<input class="btn btn-success radius mt-15 ml-20" id="sort" type="button" value="排序">
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="/statics/admin/lib/jquery/1.9.1/jquery.js"></script>
+<script type="text/javascript" src="/statics/admin/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="/statics/admin/static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="/statics/admin/static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="/statics/js/admin_status.js"></script>
+<script type="text/javascript" src="/statics/js/admin_del.js"></script>
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript">
+    /*添加*/
+    function type_add(title,url){
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url,
+            area:['550px','480px']
+        });
+
+    }
+
+    /*产品-编辑*/
+    function type_edit(url){
+        var index = layer.open({
+            type: 2,
+            title: '栏目编辑',
+            content: url,
+            area:['550px','480px']
+        });
+
+    }
+
+    //排序
+    $('#sort').click(function() {
+        var sort = new Array();
+        $('table tr.data').each(function(k,v) {
+            var key = $(this).find('td').eq(1).text();
+            var val = $(this).find('td').find('input').val();
+            sort.push({'id':key,'order':val});
+        })
+        var data = {model:'category','sort':sort};
+        $.post('/zbpadmin/common/sort',data,function(result) {
+            if(result.errno == 0){
+                layer.msg('重排序成功',{'icon':1});
+                setTimeout(function() {
+                    location.reload();
+                },1200)
+            }else{
+                layer.msg(result["errmsg"],{'icon':2});
+            }
+        }, "json")
+    })
+</script>
+</body>
+</html>

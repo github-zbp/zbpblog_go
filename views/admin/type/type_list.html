@@ -1,0 +1,291 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="/lib/html5shiv.js"></script>
+<script type="text/javascript" src="/lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="/static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="/static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="/lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="/static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="/static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>分类管理</title>
+
+<style>
+	.pagination{
+		margin:0;
+		padding:0;
+		list-style:none;
+		margin:20px 0;
+	}
+	
+	.pagination li a{
+		line-height:35px;
+		font-size:16px;
+		color:#444;
+		text-align:center;
+	}
+	
+	.pagination li{
+		width:35px;
+		height:35px;
+		line-height:35px;
+		font-size:16px;
+		color:#444;
+		margin:3px;
+		float:left;
+		border:1px solid #ccc;
+		text-align:center;
+	}
+	
+	.pagination .active{
+		background:skyblue;
+		color:#fff
+	}
+</style>
+
+</head>
+<body>
+
+<div class="modal fade" id="addkw" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">添加关键词</h4>
+            </div>
+            <form method="post" action="/zbpadmin/type/add_kw">
+			<div class="modal-body">
+				
+			  <div class="form-group">
+				<label for="exampleInputEmail1">关键词:(请将每个关键词用,隔开)</label>
+				<br/>
+				<br/>
+				<textarea name="kw" style="height:250px;width:500px;line-height:30px;font-size:16px;word-break: keep-all;word-wrap: break-word;padding:5px;" required>{$kw}</textarea>
+			  </div>
+			  
+			  <br/><br/>
+			  
+			</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="submit" class="btn btn-primary">提交更改</button>
+            </div>
+			</form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div class="modal fade" id="addart" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            
+            
+			<div class="modal-body">
+				
+			  <p></p>
+			  
+			</div>
+           
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 分类 <span class="c-gray en">&gt;</span> 分类管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="pd-20">
+  
+  <div class="cl pd-5 bg-1 bk-gray mt-20">
+    <span class="l">
+	<!-- <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="icon-trash"></i> 批量删除</a> -->
+    <a href="/zbpadmin/type/add" class="btn btn-primary radius"><i class="icon-plus"></i> 添加分类</a>
+	<a  class="btn btn-primary radius sendart">发送最新文章</a>
+	<a class="btn btn-primary radius addkw">添加关键词</a>
+	<a  class="btn btn-warning radius set-add-kw">批量设置添加kw</a>
+	<a  class="btn btn-warning radius set-cancel-kw">批量设置取消kw</a>
+	<span class="select-box inline">
+		<select name="pid" id="sel-type" class="select">
+			<option value="0" {if $pid==0}selected{/if}>总分类</option>
+			{foreach $select_types as $k=>$v}
+				<option value="{$v['id']}" {if $pid=$v['id']}selected{/if}>{$v['name']}</option>
+			{/foreach}
+		</select>
+	</span>
+	</span>
+    <span class="r">共有所有分类数据：<strong>{$num}</strong> 条</span>
+  </div>
+  <table class="table table-border table-bordered table-hover table-bg table-sort">
+    <thead>
+      <tr class="text-c">
+        <th width="25"><input type="checkbox" name="" value=""></th>
+        <th width="80">ID</th>
+        <th width="100">分类名称</th>
+        <th width="100">文章数(不含子分类文章)</th>
+		<th width="100">发送文章数</th>
+		<th width="100">发送次数</th>
+		<th width="100">关键词</th>
+		
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+	{foreach $types as $k=>$v}
+      <tr class="text-c">
+        <td><input class="mul-select" data-id='{$v["id"]}' type="checkbox" value="1" name=""></td>
+        <td>{$v['id']}</td>
+       
+        <td>{$v['name']}</td>
+        <td>
+		{$v['arts_count']}
+		</td>
+		<td>
+		{$v['num']}
+		</td>
+		<td>
+		{$v['times']}
+		</td>
+		<td>
+		{$v['need_kw']?"插入":"不插入"}
+		</td>
+        <td class="f-14 user-manage">
+			<a class="btn btn-primary" href="/zbpadmin/type/edit?id={$v['id']}" target="_blank">修改</a>
+			{if $v['arts_count']==0}
+				<a class="btn btn-danger" href="/zbpadmin/type/del?id={$v['id']}">删除</a>
+				{else}
+				<a class="btn btn-danger">暂无操作</a>
+			{/if}
+		</td>
+      </tr>
+	  {/foreach}
+    </tbody>
+  </table>
+  {$types|raw}
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="/static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="/static/h-ui.admin/js/H-ui.admin.js"></script>
+<!--/_footer 作为公共模版分离出去-->
+
+<script>
+	$(function(){
+		
+		$("#sel-type").change(function(){
+			var pid = $(this).val();
+			var url = "/zbpadmin/type/lists?pid="+pid;
+			location.href = url;
+			
+		})
+		
+		$(".addkw").click(function(){
+			$("#addkw").modal();
+		})
+		
+		$(".set-add-kw").click(function(){
+			var ids = [];
+			$(".mul-select:checked").each(function(){
+				ids.push($(this).attr("data-id"));
+			});
+			
+			if(ids.length==0){
+				return false;
+			}
+			
+			url = "/zbpadmin/type/change_kw_status";
+			$.post(url,{ids:ids,need_kw:1},function(d){
+				if(!d.errno){
+					alert("修改网站关键词状态成功");
+					location.href=location.href;
+				}
+			},"json");
+		});
+		
+		$(".set-cancel-kw").click(function(){
+			var ids = [];
+			$(".mul-select:checked").each(function(){
+				ids.push($(this).attr("data-id"));
+			});
+			
+			if(ids.length==0){
+				return false;
+			}
+			
+			url = "/zbpadmin/type/change_kw_status";
+			$.post(url,{ids:ids,need_kw:0},function(d){
+				if(!d.errno){
+					alert("修改网站关键词状态成功");
+					location.href=location.href;
+				}
+			},"json");
+		});
+		
+		$(".sendart").click(function(){
+			if(!confirm("确认对所选网站发送文章?")){
+				return false;
+			}
+		
+			$("#addart").find(".modal-body p").html("文章发送中,请等待")
+			$("#addart").modal();
+			
+			var send_url = "/zbpadmin/api/sendArt";
+			var ids = [];
+			$(".mul-select:checked").each(function(){
+				ids.push($(this).attr("data-id"));
+			});
+			
+			
+			var order = $("input[name=order]:checked").val();
+			$.post(send_url,{"ids":ids,"order":order},function(d){
+				if(d.errno){
+					$("#addart").find(".modal-body p").html(d.errmsg);
+				}else{
+					$("#addart").find(".modal-body p").html("文章发送完毕");
+				}
+				setTimeout(function(){
+					
+					$("#addart").modal("hide");
+				},1500);
+			},"json");
+		});
+	})
+</script>
+
+
+<!--请在下方写此页面业务相关的脚本-->
+<!-- <script type="text/javascript" src="/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>  -->
+<script type="text/javascript" src="/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+window.onload = (function(){
+    // optional set
+    pageNav.pre="&lt;上一页";
+    pageNav.next="下一页&gt;";
+    // p,当前页码,pn,总页面
+    pageNav.fn = function(p,pn){$("#pageinfo").text("当前页:"+p+" 总页: "+pn);};
+    //重写分页状态,跳到第三页,总页33页
+    pageNav.go(1,13);
+});
+$('.table-sort').dataTable({
+	"lengthMenu":false,//显示数量选择 
+	"bFilter": false,//过滤功能
+	"bPaginate": false,//翻页信息
+	"bInfo": false,//数量信息
+	"aaSorting": [[ 1, "desc" ]],//默认第几个排序
+	"bStateSave": true,//状态保存
+	"aoColumnDefs": [
+	  //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+	  {"orderable":false,"aTargets":[0,8,9]}// 制定列不参与排序
+	]
+});
+</script>
+</body>
+</html>

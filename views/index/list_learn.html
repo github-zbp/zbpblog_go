@@ -1,0 +1,58 @@
+<div id="container">
+	<div class="c-all">
+		{{str2html .bread_crumb}}
+		<div class="cate-desc">
+			<div class="cate-name-box">{{.curCate.zh_name}}<div></div></div>
+			<p>
+				{{.global.seo.description}}
+			</p>
+		</div>
+	</div>
+	<div class="c-left">
+		<div class="section sec1">
+			
+		</div>
+		
+		<div class="section sec2">
+			<div class="section-head">
+				最新文章
+			</div>
+			<div class="section-content">
+				<ul class="index-ul-blog">
+					{{range $blog_index, $blog := .blogs}}
+					<li class="item-blog">
+						<div class="blog-img pc inline-block">
+							<a href="/blog-{{$blog.id}}.html" target="_blank">
+								<img src="{{$blog.thumb}}" onerror="this.src='/static/home/images/default.png'" title="{{$blog.title}}" alt="{{$blog.title}}"/>
+								<a class="cate-tag1" href="/cate-{{$.global.curCate.en_name}}">{{$.global.curCate.zh_name}}</a>
+							</a>
+						</div>
+						<div class="blog-info inline-block">
+							<h2 class="blog-h2"><a href="/blog-{{$blog.id}}.html" target="_blank" title="{{$blog.title}}">{{$blog.title}}</a></h2>
+							<div>发布时间:<span>{{$blog.create_time}}</span></div>
+							<p>{{$blog.description}}</p>
+							
+							<div class="art-tags-box">
+								<ul class="art-tags-ul">
+								{{if (index $.blogs_tags $blog.id)}}
+								<i class="icon tag-icon"></i>
+								{{end}}
+								{{range $blog_tag_index, $tag := (index $.blogs_tags $blog.id)}}
+									<li class="float art-tags-li"><a href="/tag{{$tag.Id}}-{{$tag.Name}}" title="{{$tag.Name}}" target="_blank">{{$tag.Name}}</a></li>
+								{{end}}
+								</ul>
+								
+							</div>
+						</div>
+					</li>
+					{{end}}
+				</ul>
+			</div>
+			
+			{{template "public/paginate.html" .}}
+		</div>
+		
+	</div>
+
+	{{template "right/right.html" .}}
+</div>

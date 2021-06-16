@@ -1,0 +1,11 @@
+.series-box {
+    padding: 15px 0;
+}
+
+.series-box .series-label {
+    margin: 5px 20px 5px 0;
+}
+
+#select-series-box {
+    display: none;
+}

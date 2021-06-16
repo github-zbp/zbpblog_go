@@ -1,0 +1,12 @@
+<!-- 分页模板 -->
+<div id="page" style="padding-top:15px">
+    <a class="btn btn-default page-first" href="/cate-{{.global.curCate.en_name}}">首页</a>
+    {{if .page_info.prevPage}}
+    <a class="btn btn-default page-prev" href="/cate-{{.global.curCate.en_name}}-page{{.page_info.prevPage}}">上一页</a>
+    {{end}}
+    {{if .page_info.nextPage}}
+    <a class="btn btn-default page-next" href="/cate-{{.global.curCate.en_name}}-page{{.page_info.nextPage}}">下一页</a>
+    {{end}}
+    <a class="btn btn-default page-first" href="/cate-{{.global.curCate.en_name}}-page{{.page_info.totalPage}}">尾页</a>
+    <div class="page_info">当前第 <b>{{.page_info.curPage}}</b> 页 &nbsp;&nbsp;&nbsp;&nbsp; 共 <b>{{.page_info.totalPage}}</b> 页 <b>{{.page_info.totalRow}}</b> 条信息</div>
+</div>
